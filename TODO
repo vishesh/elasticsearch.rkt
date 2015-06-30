@@ -1,0 +1,7 @@
+TODO
+====
+
+* Fix the data defintions and signatures of functions
+* Take multiple hosts
+* Extend API
+* Better way to write queries? `hash` looks verbose
