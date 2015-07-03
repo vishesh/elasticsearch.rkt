@@ -11,7 +11,7 @@ Examples
 --------
 
 ```racket
-(require elasticsearch)
+(require (prefix-in es/ elasticsearch))
 
 ; the client structure required by all ES function
 (struct es/client (host port ssl? username password))

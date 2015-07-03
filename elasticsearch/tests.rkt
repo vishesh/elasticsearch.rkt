@@ -2,7 +2,7 @@
 
 (require rackunit
          json
-         "elasticsearch.rkt")
+         (prefix-in es/ "elasticsearch.rkt"))
 
 (test-begin
   (define C es/DEFAULT-CLIENT)
