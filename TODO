@@ -2,6 +2,7 @@ TODO
 ====
 
 * Fix the data defintions and signatures of functions
-* Take multiple hosts
+* Take multiple hosts, clusters
 * Extend API
 * Better way to write queries? `hash` looks verbose
+* Helper functions to write queries more cleanly ... ref Clojure impl

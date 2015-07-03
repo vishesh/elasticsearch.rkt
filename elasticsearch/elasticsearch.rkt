@@ -127,6 +127,8 @@
   ;FIXME: use url joiner
   (do-request c 'GET (format "~a/_status" index)))
 
+;; Document API
+
 ; document-index : client? string? string? jsexpr? serializable? -> string?
 ; Index or update document. If id is not given, we pass op_type=create
 ; option to force create
@@ -158,6 +160,8 @@
     (do-request c 'DELETE (format "~a/~a/~a" index doctype (uri-encode id)))
     'found))
 
+;; Searching
+;
 ; query-string : client? string [string?] [string?] -> jsexpr?
 ; Search query string string q in given ES index and doc type
 (define (query-string c q #:index [index ""] #:doctype [doctype ""])
