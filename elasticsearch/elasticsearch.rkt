@@ -169,14 +169,14 @@
     (error "index can't be #f for given document type"))
   (define path (build-path-string index doctype "_search"))
   (do-request 
-    c 'GET path (hash 'query (hash 'query_string (hash 'query q)))))
+    c 'POST path (hash 'query (hash 'query_string (hash 'query q)))))
 
 ; search : client? string? string? jsexpr? -> jsexpr?
 (define (search c body #:index [index #f] #:doctype [doctype #f])
   (when (and (false? index) doctype)
     (error "index can't be #f for given document type"))
   (define path (build-path-string index doctype "_search"))
-  (do-request 'GET path body))
+  (do-request c 'POST path body))
 
 ; count : client? string? string? jsexpr? -> int
 (define (count c body #:index [index #f] #:doctype [doctype #f])
