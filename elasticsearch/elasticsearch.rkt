@@ -39,7 +39,11 @@
 (struct client (host port ssl? username password))
 
 ;;; Constants
-(define DEFAULT-CLIENT (client "localhost" 9200 #f #f #f))
+(define ES-USERNAME (getenv "ES_USERNAME"))
+(define ES-PASSWORD (getenv "ES_PASSWORD"))
+(define ES-HOST (if (getenv "ES_HOST") (getenv "ES_HOST") "localhost"))
+(define ES-PORT (if (getenv "ES_PORT") (getenv "ES_PORT") 9200))
+(define DEFAULT-CLIENT (client ES-HOST ES-PORT #f ES-USERNAME ES-PASSWORD))
 
 ; get-rool-url-string : client? -> string
 ; Returns the elasticsearch server URL
