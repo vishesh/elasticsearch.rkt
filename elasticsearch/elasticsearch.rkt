@@ -39,8 +39,8 @@
 (struct client (host port ssl? username password))
 
 ;;; Constants
-(define ES-USERNAME (if (getenv "ES_USERNAME") (getenv "ES_USERNAME") #f))
-(define ES-PASSWORD (if (getenv "ES_PASSWORD") (getenv "ES_PASSWORD") #f))
+(define ES-USERNAME (getenv "ES_USERNAME"))
+(define ES-PASSWORD (getenv "ES_PASSWORD"))
 (define ES-HOST (if (getenv "ES_HOST") (getenv "ES_HOST") "localhost"))
 (define ES-PORT (if (getenv "ES_PORT") (getenv "ES_PORT") 9200))
 (define DEFAULT-CLIENT (client ES-HOST ES-PORT #f ES-USERNAME ES-PASSWORD))
