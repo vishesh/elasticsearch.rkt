@@ -19,10 +19,10 @@ Examples
 # this is provided as constant es/DEFAULT-CLIENT
 (define DC (es/client "localhost" "9200" #f #f #f))
 
-(es/index-create "twitter") ; returns jsexpr returned by ES
+(es/index-create DC "twitter") ; returns jsexpr returned by ES
 
 ; delete index, return true if successful
-(es/index-delete C "twitter")
+(es/index-delete DC "twitter")
 
 ; create a mapping. returns true if successful
 (es/mapping-put
