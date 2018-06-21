@@ -67,10 +67,10 @@
                         [(eqv? type 'GET) get-pure-port]
                         [(eqv? type 'POST)
                          (λ (d)
-                           (post-pure-port d (jsexpr->bytes data)))]
+                           (post-pure-port d (jsexpr->bytes data) '("Content-Type: application/json")))]
                         [(eqv? type 'PUT)
                          (λ (d)
-                           (put-pure-port d (jsexpr->bytes data)))]
+                           (put-pure-port d (jsexpr->bytes data) '("Content-Type: application/json")))]
                         [(eqv? type 'DELETE) delete-pure-port]
                         [else (error "invalid request type")]))
   (define result (port->jsexpr
