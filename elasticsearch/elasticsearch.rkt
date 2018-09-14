@@ -29,7 +29,6 @@
          status
          total-hits)
 
-
 ;TODO: Fix data definitions
 
 ; Record is jsexpr, interp: actual result documents
@@ -51,8 +50,12 @@
   (define mode (if (client-ssl? c) "https" "http"))
   (define auth
     (if (and (client-username c) (client-password c))
-      (format "~a:~a@" (client-username c (client-password c))) ""))
+        (format "~a:~a@" (client-username c) (client-password c)) ""))
   (format "~a://~a~a:~a/" mode auth (client-host c) (client-port c)))
+
+(module+ test
+  (define c (client "host" "port" #t "username" "password"))
+  (define url (get-root-url-string c)))
 
 ; port->jsexpr : input-port? -> jsexpr?
 ; Reads all input from port and convert to jsexpr
@@ -78,7 +81,7 @@
                      (string->url (string-append (get-root-url-string c)
                                                  path)))))
   (if (hash-ref result 'error #f)
-    (error (hash-ref result 'error))
+      (error (jsexpr->string (hash-ref result 'error)))
     result))
 
 ;; Index functions
