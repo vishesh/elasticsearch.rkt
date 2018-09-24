@@ -2,6 +2,7 @@
 
 (require json)
 (require net/url
+         net/base64
          net/uri-codec
          net/http-client)
 
@@ -50,12 +51,21 @@
   (define mode (if (client-ssl? c) "https" "http"))
   (define auth
     (if (and (client-username c) (client-password c))
-        (format "~a:~a@" (client-username c) (client-password c)) ""))
-  (format "~a://~a~a:~a/" mode auth (client-host c) (client-port c)))
+        (format "~a:~a" (client-username c) (client-password c)) ""))
+  (define header (if (equal? auth "")
+                     (list)
+                     (list
+                      (format
+                       "Authorization: Basic ~a"
+                       (bytes->string/utf-8
+                        (regexp-replace #rx#"[\r\n]+$"
+                                        (base64-encode (string->bytes/utf-8 auth)) ""))))))
+  (values (format "~a://~a:~a/" mode (client-host c) (client-port c)) header)
+  )
 
 (module+ test
   (define c (client "host" "port" #t "username" "password"))
-  (define url (get-root-url-string c)))
+  (define-values (url header) (get-root-url-string c)))
 
 ; port->jsexpr : input-port? -> jsexpr?
 ; Reads all input from port and convert to jsexpr
@@ -69,17 +79,20 @@
   (define request-fn! (cond
                         [(eqv? type 'GET) get-pure-port]
                         [(eqv? type 'POST)
-                         (λ (d)
-                           (post-pure-port d (jsexpr->bytes data) '("Content-Type: application/json")))]
+                         (λ (d [header '()])
+                           (post-pure-port d (jsexpr->bytes data)
+                                           (append header '("Content-Type: application/json"))))]
                         [(eqv? type 'PUT)
-                         (λ (d)
-                           (put-pure-port d (jsexpr->bytes data) '("Content-Type: application/json")))]
+                         (λ (d [header '()])
+                           (put-pure-port d (jsexpr->bytes data)
+                                          (append header '("Content-Type: application/json"))))]
                         [(eqv? type 'DELETE) delete-pure-port]
                         [else (error "invalid request type")]))
   (define result (port->jsexpr
-                   (request-fn!
-                     (string->url (string-append (get-root-url-string c)
-                                                 path)))))
+                  (let-values ([(url-string header) (get-root-url-string c)])
+                    (request-fn!
+                     (string->url (string-append url-string path))
+                     header))))
   (if (hash-ref result 'error #f)
       (error (jsexpr->string (hash-ref result 'error)))
     result))
